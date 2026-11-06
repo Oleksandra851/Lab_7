@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Lab_7.ViewModels"
+             x:Class="Lab_7.Views.TeachersListPage"
+             Title="{Binding Title}">
+
+    <ContentPage.BindingContext>
+        <vm:TeachersListViewModel />
+    </ContentPage.BindingContext>
+
+    <Grid RowDefinitions="Auto, Auto, *" Padding="15" RowSpacing="10">
+
+        <!-- Кнопка додавання -->
+        <Button Grid.Row="0" Text="+ Додати нового викладача"
+                Command="{Binding AddTeacherCommand}"
+                BackgroundColor="#0d6efd" TextColor="White"
+                CornerRadius="8" FontAttributes="Bold" HeightRequest="45" FontSize="15" />
+
+        <!-- Шапка таблиці -->
+        <Border Grid.Row="1" BackgroundColor="#dbeafe" Stroke="#93c5fd" StrokeShape="RoundRectangle 8" Padding="12,10">
+            <Grid ColumnDefinitions="*, 130, 220, 230" ColumnSpacing="12">
+                <Label Grid.Column="0" Text="ПІБ Викладача" FontAttributes="Bold" TextColor="#1e3a8a" FontSize="14" VerticalOptions="Center"/>
+                <Label Grid.Column="1" Text="Посада" FontAttributes="Bold" TextColor="#1e3a8a" FontSize="14" VerticalOptions="Center"/>
+                <Label Grid.Column="2" Text="Предмети (Години)" FontAttributes="Bold" TextColor="#1e3a8a" FontSize="14" VerticalOptions="Center"/>
+                <Label Grid.Column="3" Text="Дії" FontAttributes="Bold" TextColor="#1e3a8a" FontSize="14" HorizontalTextAlignment="Center" VerticalOptions="Center"/>
+            </Grid>
+        </Border>
+
+        <!-- Список викладачів -->
+        <RefreshView Grid.Row="2" Command="{Binding LoadTeachersCommand}" IsRefreshing="{Binding IsBusy}">
+            <CollectionView ItemsSource="{Binding Teachers}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="0,4" Padding="12" Stroke="#cbd5e1" BackgroundColor="White" StrokeShape="RoundRectangle 10">
+                            <Grid ColumnDefinitions="*, 130, 220, 230" ColumnSpacing="12" VerticalOptions="Center">
+
+                                <!-- ПІБ Викладача -->
+                                <VerticalStackLayout Grid.Column="0" VerticalOptions="Center">
+                                    <Label Text="{Binding FullName}" FontAttributes="Bold" FontSize="16" TextColor="#1e3a8a"/>
+                                </VerticalStackLayout>
+
+                                <!-- Посада -->
+                                <VerticalStackLayout Grid.Column="0" Grid.ColumnSpan="2" IsVisible="false"/>
+                                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                    <Border BackgroundColor="#eff6ff" Stroke="#bfdbfe" StrokeShape="RoundRectangle 6" Padding="8,4" HorizontalOptions="Start">
+                                        <Label Text="{Binding Position.PositionName}" FontSize="13" TextColor="#1d4ed8" FontAttributes="Bold"/>
+                                    </Border>
+                                </VerticalStackLayout>
+
+                                <!-- Предмети та години -->
+                                <CollectionView Grid.Column="2" ItemsSource="{Binding TeacherSubjects}" HeightRequest="55" VerticalOptions="Center">
+                                    <CollectionView.ItemTemplate>
+                                        <DataTemplate>
+                                            <HorizontalStackLayout Spacing="6" Margin="0,2">
+                                                <Label Text="•" TextColor="#0284c7" FontSize="13"/>
+                                                <Label Text="{Binding Subject.SubjectName}" FontSize="13" TextColor="#1e293b"/>
+                                                <Label Text="{Binding HoursRead, StringFormat='({0} год)'}" FontSize="13" TextColor="#64748b" FontAttributes="Italic"/>
+                                            </HorizontalStackLayout>
+                                        </DataTemplate>
+                                    </CollectionView.ItemTemplate>
+                                </CollectionView>
+
+                                <!-- Кнопки дій -->
+                                <HorizontalStackLayout Grid.Column="3" Spacing="6" HorizontalOptions="Center" VerticalOptions="Center">
+                                    <Button Text="Деталі" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TeachersListViewModel}}, Path=DetailsTeacherCommand}" 
+                                            CommandParameter="{Binding .}" 
+                                            BackgroundColor="#0ea5e9" TextColor="White" HeightRequest="36" WidthRequest="65" FontSize="12" FontAttributes="Bold" Padding="0"/>
+
+                                    <Button Text="Редагувати" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TeachersListViewModel}}, Path=EditTeacherCommand}" 
+                                            CommandParameter="{Binding .}" 
+                                            BackgroundColor="#eab308" TextColor="White" HeightRequest="36" WidthRequest="85" FontSize="12" FontAttributes="Bold" Padding="0"/>
+
+                                    <Button Text="Видалити" 
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type vm:TeachersListViewModel}}, Path=DeleteTeacherCommand}" 
+                                            CommandParameter="{Binding .}" 
+                                            BackgroundColor="#ef4444" TextColor="White" HeightRequest="36" WidthRequest="80" FontSize="12" FontAttributes="Bold" Padding="0"/>
+                                </HorizontalStackLayout>
+
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+    </Grid>
+</ContentPage>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:Lab_7.ViewModels"
+             x:Class="Lab_7.Views.TeacherEditPage"
+             Title="{Binding Title}">
+
+    <ContentPage.BindingContext>
+        <vm:TeacherEditViewModel />
+    </ContentPage.BindingContext>
+
+    <ScrollView Padding="20">
+        <VerticalStackLayout Spacing="12">
+            <Label Text="Прізвище*" FontAttributes="Bold" />
+            <Entry Text="{Binding LastName}" Placeholder="Введіть прізвище" />
+
+            <Label Text="Ім'я*" FontAttributes="Bold" />
+            <Entry Text="{Binding FirstName}" Placeholder="Введіть ім'я" />
+
+            <Label Text="По батькові" FontAttributes="Bold" />
+            <Entry Text="{Binding MiddleName}" Placeholder="Введіть по батькові" />
+
+            <Label Text="Телефон" FontAttributes="Bold" />
+            <Entry Text="{Binding Phone}" Placeholder="+380..." Keyboard="Telephone" />
+
+            <Label Text="Місце роботи" FontAttributes="Bold" />
+            <Entry Text="{Binding Workplace}" Placeholder="ЧНУ ім. Ю. Федьковича" />
+
+            <Label Text="Посада*" FontAttributes="Bold" />
+            <Picker ItemsSource="{Binding Positions}" 
+                    SelectedItem="{Binding SelectedPosition}" 
+                    ItemDisplayBinding="{Binding PositionName}" 
+                    Title="-- Оберіть посаду --" />
+
+            <Label Text="Домашня адреса" FontAttributes="Bold" />
+            <Entry Text="{Binding HomeAddress}" Placeholder="м. Чернівці..." />
+
+            <Label Text="Характеристика" FontAttributes="Bold" />
+            <Editor Text="{Binding Characteristic}" Placeholder="Додаткова інформація..." HeightRequest="80" />
+
+            <BoxView HeightRequest="1" Color="#cbd5e1" Margin="0,10"/>
+            <Label Text="Призначення дисциплін" FontSize="16" FontAttributes="Bold" TextColor="#1e3a8a"/>
+
+            <CollectionView ItemsSource="{Binding SubjectSelections}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid ColumnDefinitions="50, *, 120" Padding="5" VerticalOptions="Center">
+                            <CheckBox Grid.Column="0" IsChecked="{Binding IsSelected}" VerticalOptions="Center"/>
+                            <Label Grid.Column="1" Text="{Binding SubjectName}" VerticalOptions="Center" FontAttributes="Bold"/>
+                            <Entry Grid.Column="2" Text="{Binding HoursRead}" Placeholder="Години" Keyboard="Numeric" HeightRequest="40"/>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="10" Margin="0,20,0,0">
+                <Button Grid.Column="0" Text="Зберегти" Command="{Binding SaveCommand}" BackgroundColor="#0d6efd" TextColor="White" />
+                <Button Grid.Column="1" Text="Скасувати" Command="{Binding CancelCommand}" BackgroundColor="#6c757d" TextColor="White" />
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
